@@ -1,38 +1,35 @@
-var exec = require("child_process").exec;
+//var exec = require("child_process").exec;
 
-function start(response)
-{
-	console.log("request handler 'start' was called");
-	console.log("LLLLLLLLLLLL callback onRequest function end at requestHandler start function LLLLLLLLLL");
-	var startContent = "empty";
-	
-	exec("ls -lah", 
-	function(error, stdout, stderr)
-	{
-		/* this is a blocking operation = take up so much resource. Because Node is the one who do this work, and there is only one node processor to do it, this work will make the other reqeust wait. So, solow response time for all request coame after this reqeust. One better option is follow this rule of thrumb: whenever node have work that take a long time to do, out source it to other processor to do like shell.  
-		var dummyi = 0;
-		var startTime = new Date().getTime();
-		while(new Date().getTime() < startTime + 10000)
-		{
-			dummyi = dummyi + 1;
-		}
-		*/
-		startContent = "***** stdout from reqeustHandlers.start==" + stdout + "== and stderr ==" + stderr + "==";
-		response.writeHead(200, {"Content-Type": "text/plain"});
-		response.write("Hello I am in start and here is the content==" + startContent + "==");
-		response.write(stdout);
-		response.end();
-	});
+var querystring = require("querystring");
+function start(response, postData) {
+	console.log("Request handler 'start' was called.");
+	console.log("LLLLLLLLLLLL callback onReqeust function end at requestHandler start function LLLLLLLLLL");
+	var body = '<html>'+
+'<head>'+
+'<meta http-equiv="Content-Type" content="text/html; '+
+'charset=UTF-8" />'+
+'</head>'+
+'<body>'+
+'<form action="/upload" method="post">'+
+'<textarea name="text1" rows="20" cols="60"></textarea>'+
+'<input type="submit" value="Submit text" />'+
+'</form>'+
+'</body>'+
+'</html>';
 
+    response.writeHead(200, {"Content-Type": "text/html"});
+    response.write(body);
+    response.end();
 }
 
-function upload(response)
+function upload(response, postData)
 {
 	console.log("request handler 'upload' was called");
 	console.log("LLLLLLLLLLLL callback onReqeust function end at requestHandler upload function LLLLLLLLLL");
 	var uploadContent = "^^^^^^^hello from reqeustHandlers.upload";
 	response.writeHead(200, {"Content-Type": "text/plain"});
 	response.write("Hello I am in upload and here is the content==" + uploadContent + "==");
+	response.write("here report back to your posted data==" + querystring.parse(postData).text1+"==");
 	response.end();
 
 }

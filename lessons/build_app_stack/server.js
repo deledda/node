@@ -14,9 +14,12 @@ function start(route, handle)
 	var requestCount;
 	requestCount = 0;
 
+	
 	function onRequest(request, response) {
 		var pathname = url.parse(request.url).pathname;
+		var allPostData = '';
 		requestCount = requestCount + 1;
+		
 		if (pathname ==="/favicon.ico")
 		{
 			console.log("------- "+ requestCount + " /favicon.ico callback ------- ");
@@ -28,7 +31,15 @@ function start(route, handle)
 		
 		console.log("onRequest pathname==" + pathname + "== recieved");
 		
-		route(handle, pathname, response);
+		request.setEncoding("utf8");
+		
+		request.addListener("data", function(postDataChunk)
+		{ 
+			allPostData += postDataChunk;
+			console.log("Recieved post data chunck=="+ postDataChunk + "==");
+		});
+		request.addListener("end", function(){route(handle, pathname, response, allPostData);});
+		
 		
 		// var v_query = url.parse(request.url).query;
 		// console.log("onRequest query==" + v_query + "== recieved");

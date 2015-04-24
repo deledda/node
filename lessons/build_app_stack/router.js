@@ -1,10 +1,10 @@
-function route(handle, pathname, response)
+function route(handle, pathname, response, postData)
 {
 	console.log("route function is about to route a reqeust for==" + pathname + "==");
 	var routerContent;
 	if (typeof handle[pathname] === 'function')
 	{
-		handle[pathname](response);
+		handle[pathname](response, postData);
 	}
 	else
 	{
